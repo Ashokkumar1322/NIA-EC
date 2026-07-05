@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee's Compensation Policy Premium Calculator</title>
+    <title>Employees' Compensation Policy Premium Calculator</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
@@ -22,7 +22,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             max-width: 100%;
             overflow-x: auto;
-            margin-bottom: 30px; /* Added margin to separate from the lookup table */
+            margin-bottom: 30px;
         }
         h2 {
             color: #2c3e50;
@@ -186,12 +186,13 @@
             border-radius: 3px;
         }
 
-        /* Export Buttons */
+        /* Export Controls & Buttons */
         .export-controls {
             margin-top: 30px;
             display: flex;
             justify-content: flex-end;
             gap: 15px;
+            flex-wrap: wrap;
         }
         .btn-export {
             padding: 12px 20px;
@@ -206,12 +207,13 @@
         .btn-export:hover { opacity: 0.8; }
         .btn-excel { background-color: #217346; } 
         .btn-pdf { background-color: #e74c3c; }   
+        .btn-clear { background-color: #f39c12; } 
     </style>
 </head>
 <body>
 
 <div class="container" id="printableArea">
-    <h2>Employee's Compensation Premium Calculator</h2>
+    <h2>Employees' Compensation Premium Calculator</h2>
 
     <div class="info-header">
         <div class="info-group">
@@ -234,13 +236,13 @@
                 <th class="action-col" style="width: 9%;">ADD/DELETE ROW</th>
                 <th style="width: 10%;">OCCUPATION</th>
                 <th>MONTHLY WAGES</th>
-                <th>NUMBER OF WORKERS</th>
+                <th>NUMBER OF EMPLOYEES</th>
                 <th>POLICY PERIOD IN MONTHS</th>
                 <th>TOTAL WAGES FOR POLICY PERIOD</th>
                 <th>WAGES FOR POLICY PERIOD UPTO RS 15000</th>
                 <th>WAGES FOR POLICY PERIOD ABOVE RS 15000</th>
-                <th>PREMIUM RATE (PER 1000) FOR WAGES UPTO RS 15000</th>
-                <th>PREMIUM RATE (PER 1000) FOR WAGES ABOVE RS 15000</th>
+                <th>PREMIUM RATE (PER MILLE) FOR WAGES UPTO RS 15000</th>
+                <th>PREMIUM RATE (PER MILLE) FOR WAGES ABOVE RS 15000</th>
                 <th>PREMIUM AMOUNT FOR WAGES UPTO RS 15000</th>
                 <th>PREMIUM AMOUNT FOR WAGES ABOVE RS 15000</th>
                 <th>TOTAL PREMIUM</th>
@@ -324,6 +326,7 @@
     </div>
     
     <div class="export-controls" id="exportArea">
+        <button class="btn-export btn-clear" onclick="clearAllData()">🗑️ CLEAR ALL</button>
         <button class="btn-export btn-excel" onclick="downloadCSV()">📥 Download as Excel</button>
         <button class="btn-export btn-pdf" onclick="downloadPDF()">📄 Download as PDF</button>
     </div>
@@ -400,6 +403,28 @@
         if (tbody.children.length === 0) {
             addBlankRow();
         }
+    }
+
+    function clearAllData() {
+        if(!confirm("Are you sure you want to clear all entered data?")) return;
+        
+        // Clear Header Details
+        document.getElementById('customerName').value = '';
+        document.getElementById('officeName').value = '';
+        document.getElementById('otherInfo').value = '';
+
+        // Clear Table
+        document.getElementById('tableBody').innerHTML = '';
+        addBlankRow();
+
+        // Reset Summary Options
+        document.getElementById('discountType').value = 'discount';
+        document.getElementById('discountPct').value = '0';
+        document.getElementById('medDropdown').value = '0';
+        updateMedPct(); // This auto-updates the medical percentage and triggers recalculation
+        document.getElementById('medDiscountPct').value = '0';
+        
+        calculateTotals();
     }
 
     function updateMedPct() {
@@ -1033,406 +1058,4 @@
         { trade: "Motor Tractors Owners - (Land cultivation only)", rate: "36.50" },
         { trade: "Myrobalan Extract Manufacturing", rate: "15.10" },
         { trade: "Nail Makers Where no mechanically is used", rate: "18.50" },
-        { trade: "Nail Makers Where machinery is used", rate: "24.30" },
-        { trade: "Nurse - Not attending on lunatics", rate: "5.85" },
-        { trade: "Nurse - Attending on lunatics", rate: "9.25" },
-        { trade: "Nut and Bolt Makers (Iron and Steel) Where no mechanically driven machinery is used", rate: "18.50" },
-        { trade: "Nut and Bolt Makers (Iron and Steel) Where machinery is used", rate: "24.30" },
-        { trade: "Oakum Mfgrs.", rate: "12.15" },
-        { trade: "Oil Companies, importing in bulk for retail Distribution - All employees", rate: "12.15" },
-        { trade: "Oil Mills (not mineral oils) and Oilcake Mfgrs", rate: "36.50" },
-        { trade: "Oil skin and Tarpaulin Mfgrs", rate: "12.15" },
-        { trade: "Oil Well Proprietors and Mineral Oil Refiners - Employees engaged in drilling and pumping erection, repair and demolition of riggs telegraph or telephone lines or overhead electric cable", rate: "97.30" },
-        { trade: "Oil Well Proprietors and Mineral Oil Refiners - All other employees", rate: "30.15" },
-        { trade: "Omnibus and Motor Bus Proprietors", rate: "24.30" },
-        { trade: "Open Cast Coal-Getting (incl. use of explosives)", rate: "68.10" },
-        { trade: "Ore Importers and Exporters where carried on as a separate trade incl. Godown and Loading and Unloading Vessels", rate: "97.30" },
-        { trade: "Oyster Cultivators", rate: "36.50" },
-        { trade: "Oil expeller and oil expeller spare parts mfgrs.", rate: "27.25" },
-        { trade: "Paint Colour and Enamal Mfgrs.- Where no red or white lead manufactured", rate: "12.15" },
-        { trade: "Paint Colour and Enamal Mfgrs.- Where red or white lead manufactured", rate: "18.50" },
-        { trade: "Painters and Decorators where carried on as separate trade, not Builders - All risks incl. ship painters, scrapers and scalers", rate: "145.90" },
-        { trade: "Painters and Decorators where carried on as separate trade, not Builders - Excl. churches, chapals, cinemas, theaters, music halls...", rate: "60.80" },
-        { trade: "Palm Trees - Tapping or Picking", rate: "48.65" },
-        { trade: "Paper Mfgrs.- Hand made only", rate: "12.15" },
-        { trade: "Paper Mfgrs.- Machine made", rate: "30.15" },
-        { trade: "Paper Mfgrs.- Waxed Paper", rate: "18.50" },
-        { trade: "Paper Patern Makers", rate: "12.15" },
-        { trade: "Paper Waxing (where carried on as a separate Trade)", rate: "18.50" },
-        { trade: "Paper Mache Decorators Inside work only", rate: "15.10" },
-        { trade: "Parcel Delivery Agents, Carriers & Carters", rate: "36.50" },
-        { trade: "Parquet Floor Cutting - Wood work machinists", rate: "30.15" },
-        { trade: "Parquet Floor Cutting - All other employees", rate: "12.15" },
-        { trade: "Parquet Floor Laying", rate: "24.30" },
-        { trade: "Patent Fuel and Firelighter Mfgrs.", rate: "97.30" },
-        { trade: "Patent Card Makers", rate: "12.15" },
-        { trade: "Perfume Mfgrs.", rate: "12.15" },
-        { trade: "Pest Control and Fumigation", rate: "24.30" },
-        { trade: "Petro Pump Stations (Not connected with garages) Delivery All other Works", rate: "12.15" },
-        { trade: "Petrochemical Industry", rate: "30.15" },
-        { trade: "Photo Block and Process Block Mfgrs.", rate: "9.25" },
-        { trade: "Photographers and Photographic Appliances Dealers - Shop and studio", rate: "7.80" },
-        { trade: "Photographers and Photographic Appliances Dealers - Operators and assistants engaged partly or wholly outside", rate: "12.15" },
-        { trade: "Picture & Picture Frame Makers, Dealers and Gilders Retail Shop risk", rate: "12.15" },
-        { trade: "Picture & Picture Frame Makers, Dealers and Gilders Wood work machinists", rate: "30.15" },
-        { trade: "Picture & Picture Frame Makers, Dealers and Gilders All other employees", rate: "12.15" },
-        { trade: "Picture Frame Moulding Makers - Wood working machinists", rate: "30.15" },
-        { trade: "Picture Frame Moulding Makers - All other employees", rate: "15.15" },
-        { trade: "Pile Drivers - Where carried on as a separate trade", rate: "54.70" },
-        { trade: "Pit Prop cutting where carried on as a separate Trade", rate: "48.65" },
-        { trade: "Planing and Moulding Mills", rate: "48.65" },
-        { trade: "Plasterers and Plaster and Fibrous Plaster Modellers and Moulders where carried on separate Trade - All Risks", rate: "97.30" },
-        { trade: "Plasterers and Plaster and Fibrous Plaster Modellers and Moulders where carried on separate Trade - Excl. churches, chapals, cinemas, exhibitions, music halls, public halls and theaters", rate: "30.15" },
-        { trade: "Plastic Goods Mfgrs.", rate: "16.50" },
-        { trade: "Plumber, Hotwater and Sanitary Engineers where carried on as separate Trade- Retail Shop risk", rate: "9.25" },
-        { trade: "Plumber, Hotwater and Sanitary Engineers where carried on as separate Trade- Mechanics:- Excl. well sinking and any work in any connection with wells exceeding 6 meters", rate: "15.10" },
-        { trade: "Plumber, Hotwater and Sanitary Engineers where carried on as separate Trade- Mechanics:- Work connection with wells exceeding 6 meters in depth but excl. Sinking", rate: "48.65" },
-        { trade: "Plumber, Hotwater and Sanitary Engineers where carried on as separate Trade- Ship furnishing", rate: "18.50" },
-        { trade: "Plumber, Hotwater and Sanitary Engineers where carried on as separate Trade- Well sinking (other than artesian and tube wells q.v.)", rate: "121.60" },
-        { trade: "Polo Clubs - Stable hands and employees engaged in ridding", rate: "60.80" },
-        { trade: "Polo Clubs - All other employees", rate: "15.10" },
-        { trade: "Porters (Station) for carrying passengers' luggage per Capita", rate: "4.90" },
-        { trade: "Potato Dehydrating - Where no mechanically driven machinery is used", rate: "9.25" },
-        { trade: "Potato Dehydrating - Where mechanically driven machinery is used", rate: "18.50" },
-        { trade: "Potteries and Pottery Decorators a) Excl. Manufacture of Flooring, Roofing and Terakotta Tiles; Excl. Clay getting and Mining also excl. Lead Poisoning", rate: "12.15" },
-        { trade: "Potteries and Pottery Decorators b) Incl. Lead poisoning - above rate plus", rate: "36.50" },
-        { trade: "Potteries and Pottery Decorators c) Tile Mfgrs., i.e. rough unglazed tiled for flooring and roofing and terakotta tiles- rate as bricks and tile Makers", rate: "48.65" },
-        { trade: "Potteries and Pottery Decorators d) Clay-getting excl. work below 6 meters (fireclay mining - rate as collieries)", rate: "24.30" },
-        { trade: "Potteries and Pottery Decorators e) Clay-getting below 6 meters excl. pit or mine", rate: "42.80" },
-        { trade: "Poultry and Hatchery- Where no electrical appliances are involved", rate: "3.05" },
-        { trade: "Poultry and Hatchery- Where electrical appliances are used", rate: "6.10" },
-        { trade: "Printers and Lithographers (Excl. paper mfgrs.) Excl. printing of daily news papers excel. lead poisoning", rate: "5.85" },
-        { trade: "Printers and Lithographers (Excl. paper mfgrs.) Printing of daily news papers excl. lead poisoning", rate: "9.25" },
-        { trade: "Printers and Lithographers (Excl. paper mfgrs.) Incl. lead poisoning - above rates plus", rate: "36.50" },
-        { trade: "Quarries - Where no blasting is done", rate: "30.15" },
-        { trade: "Quarries - Where any blasting is done", rate: "97.30" },
-        { trade: "Racecourse Employees- Grooms, Jockeys and Stable hands", rate: "60.80" },
-        { trade: "Racecourse Employees- All other employees", rate: "12.15" },
-        { trade: "Rag and Waste Dealers, Rag Pickers and Marine Store Dealers - Breaking up, dismantling and demolition", rate: "170.25" },
-        { trade: "Rag and Waste Dealers, Rag Pickers and Marine Store Dealers - All employees in loading and discharging vessels", rate: "97.30" },
-        { trade: "Rag and Waste Dealers, Rag Pickers and Marine Store Dealers - All other employees", rate: "36.50" },
-        { trade: "Railway Coach and Wagon Works", rate: "42.80" },
-        { trade: "Railway Construction and alteration- Excl. blasting and tunnelling", rate: "36.50" },
-        { trade: "Railway Construction and alteration- Incl. blasting and tunnelling", rate: "72.95" },
-        { trade: "Railway Construction and alteration- Tunnelling, incl. Blasting (when carried as a separate Contract)", rate: "97.30" },
-        { trade: "Railway up-keep and Running- Excl. Construction: Light Railways for passengers only", rate: "12.15" },
-        { trade: "Railway up-keep and Running- Excl. Construction: Light Railways for goods and passengers", rate: "15.10" },
-        { trade: "Railway up-keep and Running- Excl. Construction: Electric Railways", rate: "24.30" },
-        { trade: "Railway up-keep and Running- Excl. Construction: Other Railways", rate: "24.30" },
-        { trade: "Railway up-keep and Running- Labour employed in loading and unloading wagons", rate: "30.15" },
-        { trade: "Railway Station Refreshment Rooms' Private Contractor Controlling - Employees who travel regularly by train i.e. ice and dining car attendants", rate: "54.50" },
-        { trade: "Railway Station Refreshment Rooms' Private Contractor Controlling - Waiters who serve meals in refreshment rooms and to passengers in trains, i.e. chota hazri and tea who will occasionally travel short distance by train.", rate: "18.50" },
-        { trade: "Railway Station Refreshment Rooms' Private Contractor Controlling - Butlers, cooks and waiters who are always employed in the refreshment room and never travel by train", rate: "4.35" },
-        { trade: "Rayon Mills", rate: "7.80" },
-        { trade: "Refuse Heaps - Getting material from", rate: "42.80" },
-        { trade: "Remound depots", rate: "72.95" },
-        { trade: "Resin mfgrs.", rate: "36.50" },
-        { trade: "Rice Millers All other employees", rate: "15.10" },
-        { trade: "Rifle Clubs - All other employees incl. makers, instructors and care takers", rate: "30.15" },
-        { trade: "Rivet Makers - Making copper rivet for tin work", rate: "12.15" },
-        { trade: "Rivet Makers - All other employees", rate: "24.30" },
-        { trade: "Road Paving, Tarring and Road Making", rate: "30.15" },
-        { trade: "Roofing and Flooring Makers and/or Layers (not slaters or tilers) Hands in shop or yard - Wood working machinists", rate: "30.15" },
-        { trade: "Roofing and Flooring Makers and/or Layers (not slaters or tilers) Hands in shop or yard - All other employees", rate: "18.50" },
-        { trade: "Rope (Excl. Wire Rope) Cord and Twine - Where no mechanically driven machinery is used", rate: "12.15" },
-        { trade: "Rope (Excl. Wire Rope) Cord and Twine - Where any mechanically driven machinery is used", rate: "24.30" },
-        { trade: "Rope (Excl. Wire Rope) Cord and Twine - Cotton yarn only- Where no mechanically driven machinery is used excl. repairing and spinning", rate: "7.80" },
-        { trade: "Rope (Excl. Wire Rope) Cord and Twine - Cotton yarn only- excl. repairing and spinning", rate: "18.50" },
-        { trade: "Rubber Plantations Domestic servants whose names appears on the factory or garden register and who are paid wholly by the estate", rate: "2.90" },
-        { trade: "Rubber Plantations All other employees", rate: "2.90" },
-        { trade: "Sack Makers (Sewing only when carried on as a separate trade)-", rate: "10.70" },
-        { trade: "Safety Razor Blades Mfgrs.", rate: "12.15" },
-        { trade: "Sail Makers only, excl. Riggers", rate: "10.70" },
-        { trade: "Sail Makers Riggers", rate: "97.30" },
-        { trade: "Salt Merchants and Dealers - Hands in Warehouse receiving and delivering from or to vessels. and/or no Dock, Quayside or wharf and lightermen (excl. Stevedores)", rate: "72.95" },
-        { trade: "Salt Merchants and Dealers - All other Employees", rate: "18.15" },
-        { trade: "Salt Works Excl. Mining", rate: "24.30" },
-        { trade: "Salvage Corps - Employees solely engaged upon premises of the crops in handling and treating salvaged goods", rate: "30.15" },
-        { trade: "Salvage Corps - All other employees", rate: "30.15" },
-        { trade: "Sand - Removal sea by dredgers All employees", rate: "97.30" },
-        { trade: "Sauce Mfgrs.", rate: "18.50" },
-        { trade: "Sausage & Sausage skin Mfgrs.", rate: "21.40" },
-        { trade: "Saw Mill and Timber Merchants All Employees", rate: "30.15" },
-        { trade: "Screw Mfgrs.", rate: "12.15" },
-        { trade: "Sewer and Road Contractors Open trench work only where no blasting and tunnelling is done and where the depth in no part exceeds 3 meters", rate: "30.15" },
-        { trade: "Sewer and Road Contractors Open trench work only where no blasting and tunnelling is done and where the depth in no part exceeds 3 meters (repeated)", rate: "36.50" },
-        { trade: "Sewer and Road Contractors All risks where and/or blasting and tunnelling is done", rate: "72.95" },
-        { trade: "Sewing Machine Makers. Fitters and Repairers", rate: "15.10" },
-        { trade: "Sheet Lead Rollers and Lead Pipe Makers- Excl. Lead poisoning", rate: "48.65" },
-        { trade: "Sheet Lead Rollers and Lead Pipe Makers- Incl. Lead poisoning", rate: "60.80" },
-        { trade: "Shellac Mfgrs.", rate: "21.40" },
-        { trade: "Ship Breakers", rate: "97.30" },
-        { trade: "Ship Builders, Iron, Steel and Concrete- Where barges hoppers, dredgers, tugs, yatches, passengers and cargo vessels pilot boats not exceeding 1000 tons gross measurement are built", rate: "30.15" },
-        { trade: "Ship Builders, Iron, Steel and Concrete- Where such vessels are repaired only", rate: "42.80" },
-        { trade: "Ship Builders, Iron, Steel and Concrete- Where torpedo boats destroyers, steam trawlers and shallow draught river gunboats not exceeding 500 tons displacement and similar vessels as in class (a) over 1000 tons but not exceeding 2000 tons gross measurement are built", rate: "36.50" },
-        { trade: "Ship Builders, Iron, Steel and Concrete- Where such vessels are repaired only", rate: "54.50" },
-        { trade: "Ship Builders, Iron, Steel and Concrete- Where war ship, passenger, cargo and other vessels not incl. in (a) or (b) are built", rate: "42.80" },
-        { trade: "Ship Builders, Iron, Steel and Concrete- Where such vessels are repaired only", rate: "54.50" },
-        { trade: "Ship Builders, Iron, Steel and Concrete- Pontoon Builders and repairers", rate: "72.95" },
-        { trade: "Ship Chandlers and Ship Stores- Fixing and rigging", rate: "97.30" },
-        { trade: "Ship Chandlers and Ship Stores- All other employees", rate: "18.50" },
-        { trade: "Ship Painters Exclusively engaged in Painting Vessels- Without the use of stagings or slings", rate: "60.80" },
-        { trade: "Shipsmiths (jobbing) where carried on as a separate trade", rate: "48.65" },
-        { trade: "Shipwrights (jobbing) where carried on as a separate trade", rate: "109.45" },
-        { trade: "Shop Fitters Wood working machinists", rate: "30.15" },
-        { trade: "Shop Fitters All other employees", rate: "24.30" },
-        { trade: "Shop Risk Class A - Art, bric-a-brac and curio and art needle works", rate: "4.90" },
-        { trade: "Shop Risk Class A - Bakers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Barometer, Hydrometer, Thermometer and Mathematical Instruments", rate: "4.90" },
-        { trade: "Shop Risk Class A - Biscuits", rate: "4.90" },
-        { trade: "Shop Risk Class A - Book", rate: "4.90" },
-        { trade: "Shop Risk Class A - Boot and shoe, excl. makers and repairs", rate: "4.90" },
-        { trade: "Shop Risk Class A - Chemists", rate: "4.90" },
-        { trade: "Shop Risk Class A - China and glass", rate: "4.90" },
-        { trade: "Shop Risk Class A - Confectioners", rate: "4.90" },
-        { trade: "Shop Risk Class A - Cutlery", rate: "4.90" },
-        { trade: "Shop Risk Class A - Diaries", rate: "4.90" },
-        { trade: "Shop Risk Class A - Drapers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Dress Maskers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Fancy goods", rate: "4.90" },
-        { trade: "Shop Risk Class A - Floorist and seedsmen", rate: "4.90" },
-        { trade: "Shop Risk Class A - Furriers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Haberdashers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Hatters", rate: "4.90" },
-        { trade: "Shop Risk Class A - Hoosiers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Leather Goods", rate: "4.90" },
-        { trade: "Shop Risk Class A - Milliners", rate: "4.90" },
-        { trade: "Shop Risk Class A - Wholesale", rate: "4.90" },
-        { trade: "Shop Risk Class A - Musical instruments (Salesmen only)", rate: "4.90" },
-        { trade: "Shop Risk Class A - Naturalists not taxidermists", rate: "4.90" },
-        { trade: "Shop Risk Class A - Nautical instruments and appliances", rate: "4.90" },
-        { trade: "Shop Risk Class A - Newsagents", rate: "4.90" },
-        { trade: "Shop Risk Class A - Opticians", rate: "4.90" },
-        { trade: "Shop Risk Class A - Photographic Records", rate: "4.90" },
-        { trade: "Shop Risk Class A - Photographic appliances", rate: "4.90" },
-        { trade: "Shop Risk Class A - Photographers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Stationers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Surgical instrument and appliances", rate: "4.90" },
-        { trade: "Shop Risk Class A - Tailors, Clothiers and outfitters", rate: "4.90" },
-        { trade: "Shop Risk Class A - Toys", rate: "4.90" },
-        { trade: "Shop Risk Class A - Tobacconists", rate: "4.90" },
-        { trade: "Shop Risk Class A - Wall papers", rate: "4.90" },
-        { trade: "Shop Risk Class A - Watch Makers", rate: "4.90" },
-        { trade: "Shop Risk Class B - Fruiterers", rate: "7.80" },
-        { trade: "Shop Risk Class B - Greengrocers", rate: "7.80" },
-        { trade: "Shop Risk Class B - Groceries and provisions - no licence and no machinery All other employees", rate: "7.80" },
-        { trade: "Shop Risk Class B - Ironmongers excl. Mechanics", rate: "7.80" },
-        { trade: "Shop Risk Class B - Italian warehouse men", rate: "7.80" },
-        { trade: "Shop Risk Class B - Oil and colour", rate: "7.80" },
-        { trade: "Shop Risk Class B - Sticks and umbrellas, incl. Finishing mounting and Repairing", rate: "7.80" },
-        { trade: "Shop Risk Class C - Chandlers (not ship chandlers)", rate: "9.25" },
-        { trade: "Shop Risk Class C - Cheesemongers", rate: "9.25" },
-        { trade: "Shop Risk Class C - Cooked Meat or cooked fish", rate: "9.25" },
-        { trade: "Shop Risk Class C - Corn Chandlers, Dealers and Merchants retail only - Using no machinery driven by mechanical power and excl. Delivery", rate: "9.25" },
-        { trade: "Shop Risk Class C - Corn Chandlers, Dealers and Merchants retail only - Using machinery but excl. delivery Furniture Electrical items excl. delivery by hand, handcraft and otherwise", rate: "9.25" },
-        { trade: "Shop Risk Class C - Grocery and provisions Off licence where no bottling buy machinery is done- All other employees", rate: "9.25" },
-        { trade: "Shop Risk Class C - Hair Dressers", rate: "9.25" },
-        { trade: "Shop Risk Class C - Pawnbrokers", rate: "9.25" },
-        { trade: "Shop Risk Class C - Perambulators", rate: "9.25" },
-        { trade: "Shop Risk Class C - Picture and Picture Frame Dealers excl. Machinery", rate: "9.25" },
-        { trade: "Shop Risk Class C - Sewing and Washing machines", rate: "9.25" },
-        { trade: "Shop Risk Class C - Wine, spirit and beer dealers Off licence where no bottling by machinery is done - All other employees", rate: "9.25" },
-        { trade: "Shop Risk Class D- Groceries Provisions- Off licence where bottling by machinery is done All other employees", rate: "12.15" },
-        { trade: "Shop Risk Class D- Gunsmiths", rate: "12.15" },
-        { trade: "Shop Risk Class D- Wine Spirit and Beer dealers- Off licence only where bottling by machinery is done All other Employees", rate: "12.15" },
-        { trade: "Shop Risk Class E- Butchers", rate: "18.50" },
-        { trade: "Shop Risk Class E- Fishmongers", rate: "18.50" },
-        { trade: "Shop Risk Class E- Furniture removers", rate: "36.50" },
-        { trade: "Shop Risk Class E- Groceries and Provisions - (Full licence) All employees engaged partially or wholly in serving drink", rate: "18.50" },
-        { trade: "Shop Risk Class E- Groceries and Provisions - (Full licence) All other employees where no bottling by machinery is done excl. delivery by hand or otherwise", rate: "9.25" },
-        { trade: "Shop Risk Class E- Groceries and Provisions - (Full licence) All other employees where bottling by machinery is done excl. delivery by hand or otherwise", rate: "10.70" },
-        { trade: "Shop Risk Class E- Poulterers", rate: "18.50" },
-        { trade: "Shop Risk Class E- Publicans", rate: "18.50" },
-        { trade: "Shop Risk Class E- Wine Spirit & Beer dealers-Ful-Licence- All employees", rate: "18.50" },
-        { trade: "Short Mfgrs.", rate: "24.30" },
-        { trade: "Sign Writers - Not glass- Excl. Erection", rate: "15.10" },
-        { trade: "Sign Writers - Not glass- Incl. Erection", rate: "36.50" },
-        { trade: "Silk Artificial - Yarn Production", rate: "12.15" },
-        { trade: "Silk Artificial - Weaving and process subsequent to yarn production", rate: "7.80" },
-        { trade: "Silk Artificial - Doubling", rate: "5.85" },
-        { trade: "Silk Artificial - All Processes Winding (as separate trade)", rate: "18.50" },
-        { trade: "Silk Spinners and/or weavers", rate: "7.80" },
-        { trade: "Sinking:- Pit or Mine opening up or driving levels or slants", rate: "170.25" },
-        { trade: "Slag Crushers and Removers", rate: "60.80" },
-        { trade: "Slaters and Tilers (Roofs) where carried on as a separate trade- Work on roof; not exceeding 9 meters in height", rate: "36.50" },
-        { trade: "Slaters and Tilers (Roofs) where carried on as a separate trade- Exceeding 9 meters in height", rate: "60.80" },
-        { trade: "Slaughtermen", rate: "48.65" },
-        { trade: "Small Arm Factories- Excl. testing and cartridge loading", rate: "15.10" },
-        { trade: "Small Arm Factories- Testing and cartridge loading", rate: "48.65" },
-        { trade: "Small Wear Mfgrs. (Braid, Laces other Leather, Tassels & Cords)", rate: "9.25" },
-        { trade: "Snuff Manufacturing Factories - All other employees", rate: "18.50" },
-        { trade: "Soap Makers, melters and boilers", rate: "24.30" },
-        { trade: "Soap Makers, (toilet) where remelting and perfuming only are done", rate: "9.25" },
-        { trade: "Solvent Extraction Plants- Automatic", rate: "48.65" },
-        { trade: "Solvent Extraction Plants- Non-automatic or batch type", rate: "60.80" },
-        { trade: "Spice Mfgrs.- Incl. nut grinding and shelling", rate: "18.50" },
-        { trade: "Spring and Axle makers", rate: "15.10" },
-        { trade: "Stampers and piercers Where carried on as a separate trade", rate: "30.15" },
-        { trade: "Starch and Blue Mfgrs.", rate: "30.15" },
-        { trade: "Stationers Retail shop risk", rate: "5.85" },
-        { trade: "Stationers Manufacturing and/or wholesale", rate: "12.15" },
-        { trade: "Steel or Iron Founders - Where the heaviest casting does not exceed 1 ton", rate: "30.15" },
-        { trade: "Steel or Iron Founders - Where the heaviest casting exceeds 1 ton", rate: "42.80" },
-        { trade: "Steel or Iron Rolling Mills", rate: "48.65" },
-        { trade: "Steel work (Steel Making)", rate: "48.65" },
-        { trade: "Stevedors loading or unloading Cargo or Coal", rate: "97.30" },
-        { trade: "Stone and dressing and stone breaking Yards - All employees Whose duties take them at any time to quarry where b lasting is done", rate: "97.30" },
-        { trade: "Stone and dressing and stone breaking Yards - All other employees", rate: "60.80" },
-        { trade: "Sugar cane Plantation", rate: "5.85" },
-        { trade: "Sugar, Saccharine and Glucose Refiners and/or Mfgrs. incl. sugarcane crushing Factories engaged in preparing Jagree", rate: "18.50" },
-        { trade: "Sugar Sweet mfgrs.", rate: "15.10" },
-        { trade: "Tally Clerks", rate: "14.60" },
-        { trade: "Tanners, Carriers and Fellomongers", rate: "12.15" },
-        { trade: "Tar Spraying Roads", rate: "30.15" },
-        { trade: "Taxidermists - Excl. Anthrax", rate: "24.30" },
-        { trade: "Taxidermists - Incl. Anthrax", rate: "36.50" },
-        { trade: "Tea Gardens", rate: "2.45" },
-        { trade: "Tea Gardens - Domestic servants on Tea-Estate - Servants whose names appear on the factory or garden register and whih are paid wholly by the estate", rate: "2.45" },
-        { trade: "Tea Packing Factories - Wood working machinists", rate: "30.15" },
-        { trade: "Tea Packing Factories - All other employees", rate: "9.25" },
-        { trade: "Telephone Operators", rate: "5.85" },
-        { trade: "Tent and Marque Makers", rate: "15.10" },
-        { trade: "Tent and Marque Makers Erecting only", rate: "48.65" },
-        { trade: "Thatchers of Buildings", rate: "36.50" },
-        { trade: "Theater Artists Bandsmen and Permanent Staff", rate: "12.15" },
-        { trade: "Tilers (not roofing) and Mosaic and Tressellated Pavers Floor and, excl. clay getting", rate: "15.10" },
-        { trade: "Timber Raftmen", rate: "91.45" },
-        { trade: "Tin Dredgers", rate: "24.30" },
-        { trade: "Tin & Steel and Steel Metal Workers (incl. metal boxes and drums) Where no mechanically driven machinery is used (incl. Smelting)", rate: "18.50" },
-        { trade: "Tin & Steel and Steel Metal Workers Where any mechanically driven machinery is used", rate: "27.25" },
-        { trade: "Tin Ore Getting from open Workings and Machine Crushing", rate: "60.80" },
-        { trade: "Tin Ore Getting from open Workings where no Machinery is used", rate: "30.15" },
-        { trade: "Transmiths - Excl. Ship work", rate: "30.15" },
-        { trade: "Transmiths - Ship work", rate: "24.30" },
-        { trade: "Tobacco, Cigar and Cigarette and Bidi Mfgrs. and Dealers Retailed shop risk", rate: "7.80" },
-        { trade: "Tobacco, Cigar and Cigarette and Bidi Mfgrs. and Dealers Godwon", rate: "5.85" },
-        { trade: "Tobacco, Cigar and Cigarette and Bidi Mfgrs. and Dealers Manufacturing - Where no mechanically driven machinery is used", rate: "7.80" },
-        { trade: "Tobacco, Cigar and Cigarette and Bidi Mfgrs. and Dealers Manufacturing - Where any mechanically driven machinery is used", rate: "7.80" },
-        { trade: "Tools and Machine Tools Mfgrs.- Machine tools other than wood-working machinery", rate: "24.30" },
-        { trade: "Tools and Machine Tools Mfgrs.- Wood-working machinery", rate: "27.25" },
-        { trade: "Tools and Machine Tools Mfgrs.- Tools for use in machine tools", rate: "15.10" },
-        { trade: "Tools and Machine Tools Mfgrs.- All other tools incl. garden tools", rate: "12.15" },
-        { trade: "Toy Makers - Mfg. of all classes of toys incl. celluloid toys", rate: "54.50" },
-        { trade: "Toy Makers - Mfg. of all classes of toys excl. celluloid toys", rate: "27.25" },
-        { trade: "Toy Makers - Mfg. of all classes of toys excl. celluloid toys and excl. the use of machinery", rate: "15.10" },
-        { trade: "Tramway Construction- Incl. all incidental work on through-fares or elesewhere", rate: "60.80" },
-        { trade: "Tramway upkeep and running", rate: "36.50" },
-        { trade: "Tube Drawers", rate: "12.15" },
-        { trade: "Tug Owners - Where carried on as a separate trade", rate: "54.50" },
-        { trade: "Tunnelling incl. Blasting (when carried on as a separate trade)", rate: "97.30" },
-        { trade: "T.V. Picture Tube Mfgrs", rate: "15.10" },
-        { trade: "Typwriting Machine Makers, Dealers and Repairers and Typewriting Suppliers - Retail shop risk", rate: "7.80" },
-        { trade: "Typwriting Machine Makers, Dealers and Repairers and Typewriting Suppliers - All other employees", rate: "12.15" },
-        { trade: "Tyre Retreading and Resolving", rate: "18.50" },
-        { trade: "Tyre Vulcanisers when carried as a separate trade", rate: "15.10" },
-        { trade: "Umbrella Mfgrs. - Where hand power is used", rate: "9.25" },
-        { trade: "Umbrella Mfgrs. - Where any mechanically driven machinery is used", rate: "12.15" },
-        { trade: "Undertaker - Shop", rate: "15.10" },
-        { trade: "Undertaker - Wood working machinists", rate: "30.15" },
-        { trade: "Undertaker - Outside and stable", rate: "30.15" },
-        { trade: "Upholsterers", rate: "9.25" },
-        { trade: "Varnish Japan & Laquer Mfgrs.-", rate: "15.10" },
-        { trade: "Vener Mfgrs other than wood working machinists where carried on as separate trade - Wood-working machinists", rate: "30.15" },
-        { trade: "Vener Mfgrs other than wood working machinists where carried on as separate trade - All other employees", rate: "12.15" },
-        { trade: "Veterinary Colleges - Lecturers engaged indoors", rate: "5.85" },
-        { trade: "Veterinary Colleges - All other employees", rate: "24.30" },
-        { trade: "Veterinary Surgeons and Attendants and Grooms in employ of Veterinary Surgeons -", rate: "60.80" },
-        { trade: "Warehouse (Godwons) Hands in warehouse receiving or delivering from or to vessels and/or on dock, quayside or wharf, and lightmen and Bargemen (excl. Stevedors)", rate: "72.95" },
-        { trade: "Warehouse (Godwons) Group I Art, Bric-a-Brac, Curio", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Biscuit", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Bonded Warhouses - Incl. hand bottling", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I China Glass and earthware", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Colour, Dyes and Chemicals", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Drug", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Drysalters", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Flax", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I India Rubber", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Linen", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Oil and Italian Goods", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Publishers and Booksellers", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Sack and Bag", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Shellac", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Smallware (Braid, laces not leather, tussles and cords)", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Soft goods (textile) not Packers & Makers up as separate trade and not Forwarding and Shipping Agents - Where no packing is done by mechanical power", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Sugar", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Tea and Coffee", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group I Wholesale Grocery and provision incl. salesmen", rate: "9.25" },
-        { trade: "Warehouse (Godwons) Group II Bath Brick and Salt Merchants", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Bone incl. Anthrax", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Bottle", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Carpet, rug and linoleum", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Furniture", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Hardware and Ironmongery", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Leather and Leather Goods", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Molasses - Incl. filling by hand", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Packers and Makers up as trade", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Paper", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Public (general storing) Warhouses", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Soft goods (textile) not Packers and Makers up as a trade and not Forwarding and Shipping Agents - Where any packing is done by mechanical power", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group II Wool incl. Anthrax", rate: "12.15" },
-        { trade: "Warehouse (Godwons) Group III Branded Warehouses (on machine bottling wages only)", rate: "30.15" },
-        { trade: "Warehouse (Godwons) Group IV Machinery, Iron and Steel girders and heavy ironware incl. delivery by any vehicle mechanical or otherwise", rate: "36.50" },
-        { trade: "Waterworks and Pumping Stations - Excl. construction, alteration maintenance or repair work, the sinking or digging of wells and the use of Explosives", rate: "18.50" },
-        { trade: "Waterworks and Pumping Stations - Construction, alteration maintenance or repair work excl. Use of explosives", rate: "42.80" },
-        { trade: "Waterworks and Pumping Stations - Construction, alteration maintenance or repair work incl. use of explosives", rate: "97.30" },
-        { trade: "Waterworks and Pumping Stations - Tunnelling incl. blasting (when carried out as a separate contract)", rate: "97.30" },
-        { trade: "Weaving and Printing of Cloth by Hand Power", rate: "6.10" },
-        { trade: "Welders, where carried on as a separate trade", rate: "36.50" },
-        { trade: "Welders at a height not exceeding 60 feet", rate: "60.80" },
-        { trade: "Well Sinking - Artesian or Tube", rate: "30.15" },
-        { trade: "Well Sinking - Other Wells", rate: "121.60" },
-        { trade: "Whiting and Pipeclay Mfgrs.- Excl. Mining Quarry", rate: "18.50" },
-        { trade: "Window Cleaners", rate: "97.30" },
-        { trade: "Wire Drawers and Wire Ropes Mfgrs - Gold and Silver Wire Drawers", rate: "9.25" },
-        { trade: "Wire Drawers and Wire Ropes Mfgrs - Brass and Copper Wire Drawers", rate: "12.15" },
-        { trade: "Wire Drawers and Wire Ropes Mfgrs - Steel and Iron Wire Drawers and wire Ropes Mfgrs.", rate: "36.60" },
-        { trade: "Wire Goods Makers", rate: "21.40" },
-        { trade: "Wireless Schools Tuition and Demonstration", rate: "30.15" },
-        { trade: "Wood Ware Mfgrs. and Turners - Wood-working machinists", rate: "30.15" },
-        { trade: "Wood Ware Mfgrs. and Turners - All other employees", rate: "24.30" },
-        { trade: "Woodmen and Foresters engaged in Treefelling Sawing and Carting and/or Forest Fire Fighting", rate: "42.80" },
-        { trade: "Woolen and Worsted - Wool-combing - Incl. Anthrax", rate: "36.50" },
-        { trade: "Woolen and Worsted - Wool-combing - Excl. Anthrax Spinning Weaving, Bleaching, Dyeing and all Processes other than Wool-combing incidental to the trade carried on in or about the premises", rate: "15.10" },
-        { trade: "Woolen and Worsted - Flock, Mungo and Shoddy", rate: "24.30" },
-        { trade: "Wool Sorter and/or Wool Waste merchants - Incl. Anthrax", rate: "24.30" },
-        { trade: "Wool Sorter and/or Wool Waste merchants - Excl. Anthrax", rate: "12.15" },
-        { trade: "Wool Scourers and Carbonizers Where no wool-combing is done Incl. Anthrax", rate: "24.30" },
-        { trade: "Wool Scourers and Carbonizers Where no wool-combing is done Excl. Anthrax", rate: "15.10" },
-        { trade: "Wool Scourers and Carbonizers Where any wool-combing is done - Incl. Anthrax", rate: "36.50" },
-        { trade: "Wool Scourers and Carbonizers Where any wool-combing is done - Excl. Anthrax", rate: "24.30" },
-        { trade: "Writing Slate Mfgrs.", rate: "33.55" },
-        { trade: "Yarn and Trade Bleachers and/or Dyers- With or without machinery where yarn and trade only are handled (and where no bleaching or dyeing of any other materials is done)", rate: "7.80" },
-        { trade: "Yeast Mfgrs.-", rate: "12.15" },
-        { trade: "Zinc Smelters and/or Extractors", rate: "36.50" },
-        { trade: "Zinc Cooper and Brass Rolling where no smelting is done", rate: "36.50" }
-      ];
-
-      const searchInput = document.getElementById('wc-search-input');
-      const tableBody = document.getElementById('wc-table-body');
-
-      function renderTable(data) {
-        tableBody.innerHTML = ''; 
-        data.forEach(item => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #fff;">${item.trade}</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; background-color: #f8f9fa; font-weight: bold;">${item.rate}</td>
-          `;
-          tableBody.appendChild(row);
-        });
-      }
-
-      renderTable(tariffData);
-
-      searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const filteredData = tariffData.filter(item => 
-          item.trade.toLowerCase().includes(searchTerm)
-        );
-        renderTable(filteredData);
-      });
-    })();
-</script>
-
-</body>
-</html>
+        { trade: "Nail Makers
