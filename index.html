@@ -191,14 +191,15 @@
             margin-top: 30px;
             display: flex;
             justify-content: flex-end;
-            gap: 15px;
+            gap: 10px;
+            flex-wrap: wrap; /* Allows buttons to wrap to the next line on small screens */
         }
         .btn-export {
-            padding: 12px 20px;
+            padding: 10px 15px; /* Reduced padding for smaller size */
             border: none;
             border-radius: 5px;
             font-weight: bold;
-            font-size: 1em;
+            font-size: 0.9em; /* Reduced font size */
             cursor: pointer;
             color: white;
             transition: opacity 0.3s;
@@ -235,7 +236,7 @@
                 <th class="action-col" style="width: 9%;">ADD/DELETE ROW</th>
                 <th style="width: 10%;">OCCUPATION</th>
                 <th>MONTHLY WAGES</th>
-                <th>NUMBER OF WORKERS</th>
+                <th>NUMBER OF EMPLOYEES</th>
                 <th>POLICY PERIOD IN MONTHS</th>
                 <th>TOTAL WAGES FOR POLICY PERIOD</th>
                 <th>WAGES FOR POLICY PERIOD UPTO RS 15000</th>
