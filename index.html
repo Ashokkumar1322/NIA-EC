@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee's Compensation Policy Premium Calculator</title>
+    <title>Employees' Compensation Policy Premium Calculator</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
@@ -204,6 +204,7 @@
             transition: opacity 0.3s;
         }
         .btn-export:hover { opacity: 0.8; }
+        .btn-clear { background-color: #f39c12; } 
         .btn-excel { background-color: #217346; } 
         .btn-pdf { background-color: #e74c3c; }   
     </style>
@@ -211,7 +212,7 @@
 <body>
 
 <div class="container" id="printableArea">
-    <h2>Employee's Compensation Premium Calculator</h2>
+    <h2>Employees' Compensation Premium Calculator</h2>
 
     <div class="info-header">
         <div class="info-group">
@@ -239,8 +240,8 @@
                 <th>TOTAL WAGES FOR POLICY PERIOD</th>
                 <th>WAGES FOR POLICY PERIOD UPTO RS 15000</th>
                 <th>WAGES FOR POLICY PERIOD ABOVE RS 15000</th>
-                <th>PREMIUM RATE (PER 1000) FOR WAGES UPTO RS 15000</th>
-                <th>PREMIUM RATE (PER 1000) FOR WAGES ABOVE RS 15000</th>
+                <th>PREMIUM RATE (PER MILLE) FOR WAGES UPTO RS 15000</th>
+                <th>PREMIUM RATE (PER MILLE) FOR WAGES ABOVE RS 15000</th>
                 <th>PREMIUM AMOUNT FOR WAGES UPTO RS 15000</th>
                 <th>PREMIUM AMOUNT FOR WAGES ABOVE RS 15000</th>
                 <th>TOTAL PREMIUM</th>
@@ -324,6 +325,7 @@
     </div>
     
     <div class="export-controls" id="exportArea">
+        <button class="btn-export btn-clear" onclick="clearAll()">🗑️ Clear All</button>
         <button class="btn-export btn-excel" onclick="downloadCSV()">📥 Download as Excel</button>
         <button class="btn-export btn-pdf" onclick="downloadPDF()">📄 Download as PDF</button>
     </div>
@@ -513,6 +515,30 @@
 
         let totalPayable = premBeforeGst + gstAmount;
         document.getElementById('totalPayable').innerText = totalPayable;
+    }
+    
+    function clearAll() {
+        document.getElementById('customerName').value = '';
+        document.getElementById('officeName').value = '';
+        document.getElementById('otherInfo').value = '';
+
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        addBlankRow();
+
+        document.getElementById('discountType').value = 'discount';
+        document.getElementById('discountPct').value = '0';
+        
+        document.getElementById('medDropdown').value = '0';
+        document.getElementById('medicalPct').value = '0';
+        document.getElementById('medDiscountPct').value = '0';
+        
+        document.getElementById('wc-search-input').value = '';
+        
+        calculateTotals();
+        
+        const searchEvent = new Event('input');
+        document.getElementById('wc-search-input').dispatchEvent(searchEvent);
     }
 
     function downloadCSV() {
