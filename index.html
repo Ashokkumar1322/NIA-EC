@@ -22,7 +22,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             max-width: 100%;
             overflow-x: auto;
-            margin-bottom: 30px;
+            margin-bottom: 30px; /* Added margin to separate from the lookup table */
         }
         h2 {
             color: #2c3e50;
@@ -186,13 +186,12 @@
             border-radius: 3px;
         }
 
-        /* Export Controls & Buttons */
+        /* Export Buttons */
         .export-controls {
             margin-top: 30px;
             display: flex;
             justify-content: flex-end;
             gap: 15px;
-            flex-wrap: wrap;
         }
         .btn-export {
             padding: 12px 20px;
@@ -207,7 +206,7 @@
         .btn-export:hover { opacity: 0.8; }
         .btn-excel { background-color: #217346; } 
         .btn-pdf { background-color: #e74c3c; }   
-        .btn-clear { background-color: #f39c12; } 
+        .btn-clear { background-color: #f39c12; }
     </style>
 </head>
 <body>
@@ -1017,45 +1016,4 @@
         { trade: "Metal Workers - Bell Founders", rate: "12.15" },
         { trade: "Metal Workers - Metal Spinners", rate: "15.10" },
         { trade: "Metal Workers - Metal Makers", rate: "12.15" },
-        { trade: "Metal Workers - Pewterers", rate: "15.10" },
-        { trade: "Metal Workers - Stereotypes", rate: "15.10" },
-        { trade: "Metal Workers - Tin Refiners", rate: "12.15" },
-        { trade: "Metal Workers - Typefounders", rate: "12.15" },
-        { trade: "Maker of - Aeroplane small parts (Metal)", rate: "12.15" },
-        { trade: "Maker of - Cotton Gin Machinery parts", rate: "18.50" },
-        { trade: "Maker of - Electric Light Fittings", rate: "12.15" },
-        { trade: "Maker of - Hinges", rate: "24.30" },
-        { trade: "Maker of - Gas Fittings", rate: "12.15" },
-        { trade: "Maker of - German Silver, Solder, and Spelter Goods", rate: "12.15" },
-        { trade: "Maker of - Motor Vehicle small parts (metal)", rate: "15.10" },
-        { trade: "Maker of - Valves", rate: "12.15" },
-        { trade: "Maker of - Water fitting (excl. Meters)", rate: "12.15" },
-        { trade: "Maker of - Flexible Metallic Tubing", rate: "12.15" },
-        { trade: "Metal Workers - Workers in Zinc, not smelting or rolling - Where no work away from the shop or yard is done", rate: "15.10" },
-        { trade: "Metal Workers - Workers in Zinc, not smelting or rolling - Where any work away from the shop or yard is done", rate: "18.50" },
-        { trade: "Mechanical Appliances Like Tractors, Harvesters and Ploughers etc.", rate: "36.50" },
-        { trade: "Mica Cutters", rate: "9.25" },
-        { trade: "Milk Mfgrs., Condensed and Sterilised", rate: "27.25" },
-        { trade: "Mines - Asbestos (open cast)", rate: "42.80" },
-        { trade: "Mines - Barytes", rate: "36.50" },
-        { trade: "Mines - Chromite", rate: "54.50" },
-        { trade: "Mines - Copper", rate: "48.65" },
-        { trade: "Mines - Gold", rate: "97.30" },
-        { trade: "Mines - Graphite", rate: "42.80" },
-        { trade: "Mines - Iron Ore", rate: "97.30" },
-        { trade: "Mines - Lead", rate: "48.65" },
-        { trade: "Mines - Manganese", rate: "54.50" },
-        { trade: "Mines - Mica", rate: "42.80" },
-        { trade: "Mines - Ochre", rate: "42.80" },
-        { trade: "Mines - Salt", rate: "42.80" },
-        { trade: "Mines - Silver", rate: "48.65" },
-        { trade: "Mines - Tin", rate: "48.65" },
-        { trade: "Mines - Wolfram", rate: "48.65" },
-        { trade: "Motor Cycle and Cycle Patrols (Automobile Association or Clubs) All Employees", rate: "42.80" },
-        { trade: "Motor Race Drivers per car per race", rate: "121.60" },
-        { trade: "Motor Garages, Showrooms and Assemblers of Motor Vehicles - Woodworking machinists", rate: "30.15" },
-        { trade: "Motor Garages, Showrooms and Assemblers of Motor Vehicles - All other employees incl. salesman drivers all mechanics", rate: "15.10" },
-        { trade: "Motor Tractors Owners - (Land cultivation only)", rate: "36.50" },
-        { trade: "Myrobalan Extract Manufacturing", rate: "15.10" },
-        { trade: "Nail Makers Where no mechanically is used", rate: "18.50" },
-        { trade: "Nail Makers
+        { trade
