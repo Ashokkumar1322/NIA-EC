@@ -247,7 +247,7 @@
     </div>
 
     <div class="toggle-container">
-        <span style="margin-right: 15px; color: #2c3e50; font-weight: bold;">Period Basis:</span>
+        <span style="margin-right: 15px; color: #2c3e50; font-weight: bold;">Calculation Period Basis:</span>
         <label>
             <input type="radio" name="periodMode" value="months" checked onchange="togglePeriodMode()"> In Months
         </label>
@@ -259,17 +259,17 @@
     <table id="premiumTable">
         <thead>
             <tr>
-                <th class="action-col" style="width: 7%;">ADD/DEL</th>
-                <th style="width: 14%;">OCCUPATION</th>
+                <th class="action-col" style="width: 8%;">ADD/DEL</th>
+                <th style="width: 10%;">OCCUPATION</th>
                 <th style="width: 10%;">TARIFF RATE (PER MILLE) FOR WAGES UPTO RS 15000</th>
-                <th style="width: 9%;">MONTHLY WAGES PER EMPLOYEE</th>
-                <th style="width: 8%;">NUMBER OF EMPLOYEES</th>
+                <th>MONTHLY WAGES</th>
+                <th>NUMBER OF EMPLOYEES</th>
                 <th class="col-months">POLICY PERIOD IN MONTHS</th>
-                <th class="col-days" style="display:none; width: 8%;">DATE FROM</th>
-                <th class="col-days" style="display:none; width: 8%;">DATE TO</th>
-                <th class="col-days" style="display:none; width: 9%;">PERIOD OF INSURANCE IN DAYS</th>
-                <th style="width: 9%;">TOTAL WAGES FOR POLICY PERIOD</th>
-                <th style="width: 9%;">TOTAL PREMIUM</th>
+                <th class="col-days" style="display:none;">DATE FROM</th>
+                <th class="col-days" style="display:none;">DATE TO</th>
+                <th class="col-days" style="display:none;">PERIOD OF INSURANCE IN DAYS</th>
+                <th>TOTAL WAGES FOR POLICY PERIOD</th>
+                <th>TOTAL PREMIUM</th>
             </tr>
         </thead>
         <tbody id="tableBody">
@@ -284,7 +284,7 @@
                 <td class="col-days" style="display:none;"></td>
                 <td class="col-days" style="display:none;"></td>
                 <td id="totSalary" style="text-align: right;">0</td>
-                <td id="tableTotalPremium" style="text-align: right;">0</td>
+                <td id="tableTotalPremium" style="text-align: right;">0.00</td>
             </tr>
         </tfoot>
     </table>
@@ -293,7 +293,7 @@
         <div class="summary-row">
             <div class="summary-label">Total Base Premium</div>
             <div class="summary-input-cell" style="background: transparent;"></div>
-            <div class="summary-value" id="sumBasePremium">0</div>
+            <div class="summary-value" id="sumBasePremium">0.00</div>
         </div>
         <div class="summary-row">
             <div class="summary-label">
@@ -303,12 +303,12 @@
                 </select>
             </div>
             <div class="summary-input-cell"><input type="number" id="discountPct" value="0" step="0.01" oninput="calculateTotals()">%</div>
-            <div class="summary-value" id="discountAmount">0</div>
+            <div class="summary-value" id="discountAmount">0.00</div>
         </div>
         <div class="summary-row">
             <div class="summary-label">Premium After Discount/Loading</div>
             <div class="summary-input-cell" style="background: transparent;"></div>
-            <div class="summary-value" id="premiumAfterDiscount">0</div>
+            <div class="summary-value" id="premiumAfterDiscount">0.00</div>
         </div>
         <div class="summary-row">
             <div class="summary-label">
@@ -324,26 +324,26 @@
                 </select>
             </div>
             <div class="summary-input-cell"><input type="number" id="medicalPct" value="0" step="0.01" readonly style="background-color: #e9ecef; cursor: not-allowed; border-color: #bdc3c7;">%</div>
-            <div class="summary-value" id="medicalAmount">0</div>
+            <div class="summary-value" id="medicalAmount">0.00</div>
         </div>
         <div class="summary-row">
             <div class="summary-label">Discount on Medical Extn</div>
             <div class="summary-input-cell"><input type="number" id="medDiscountPct" value="0" step="0.01" oninput="calculateTotals()">%</div>
-            <div class="summary-value" id="medDiscountAmount">0</div>
+            <div class="summary-value" id="medDiscountAmount">0.00</div>
         </div>
         <div class="summary-row">
             <div class="summary-label">Premium Before GST</div>
             <div class="summary-input-cell" style="background: transparent;"></div>
-            <div class="summary-value" id="premiumBeforeGst">0</div>
+            <div class="summary-value" id="premiumBeforeGst">0.00</div>
         </div>
         <div class="summary-row">
             <div class="summary-label">GST @ 18%</div>
             <div class="summary-input-cell"><input type="number" id="gstPct" value="18" step="0.01" readonly style="background-color: #e9ecef; cursor: not-allowed; border-color: #bdc3c7;">%</div>
-            <div class="summary-value" id="gstAmount">0</div>
+            <div class="summary-value" id="gstAmount">0.00</div>
         </div>
         <div class="summary-row total-payable-row">
             <div class="summary-label">TOTAL AMOUNT PAYABLE INCL GST</div>
-            <div class="summary-value" id="totalPayable">0</div>
+            <div class="summary-value" id="totalPayable">0.00</div>
         </div>
     </div>
     
@@ -428,7 +428,7 @@
             <td class="col-days readonly out-days" style="${showDays} text-align: center;">0</td>
             
             <td class="readonly out-tot-sal">0</td>
-            <td class="readonly out-tot-prem" style="color: #27ae60;">0</td>
+            <td class="readonly out-tot-prem" style="color: #27ae60;">0.00</td>
         `;
         
         if (element) {
@@ -494,7 +494,7 @@
         }
 
         // Display Total Visual Wages
-        let totalWages = Math.round(salary * workers * periodMultiplier);
+        let totalWages = salary * workers * periodMultiplier;
         
         // Split Premium Logic
         let premium1 = 0;
@@ -513,11 +513,10 @@
             premium2 = (excessWages * secondaryRate) / 1000;
         }
 
-        // Round off row total premium
-        let totalPremium = Math.round(premium1 + premium2);
+        let totalPremium = premium1 + premium2;
 
-        tr.querySelector('.out-tot-sal').innerText = totalWages;
-        tr.querySelector('.out-tot-prem').innerText = totalPremium.toFixed(0);
+        tr.querySelector('.out-tot-sal').innerText = Math.round(totalWages);
+        tr.querySelector('.out-tot-prem').innerText = totalPremium.toFixed(2); // Output to 2 decimal places
 
         calculateTotals();
     }
@@ -532,19 +531,16 @@
             tSalary += parseInt(tr.querySelector('.out-tot-sal').innerText) || 0;
             tTotalPrem += parseFloat(tr.querySelector('.out-tot-prem').innerText) || 0;
         });
-        
-        // Ensure the aggregated total is rounded
-        tTotalPrem = Math.round(tTotalPrem);
 
         document.getElementById('totWorkers').innerText = tWorkers;
         document.getElementById('totSalary').innerText = tSalary;
-        document.getElementById('tableTotalPremium').innerText = tTotalPrem.toFixed(0);
+        document.getElementById('tableTotalPremium').innerText = tTotalPrem.toFixed(2);
         
-        document.getElementById('sumBasePremium').innerText = tTotalPrem.toFixed(0);
+        document.getElementById('sumBasePremium').innerText = tTotalPrem.toFixed(2);
         
         let discType = document.getElementById('discountType').value;
         let discPct = parseFloat(document.getElementById('discountPct').value) || 0;
-        let discAmount = Math.round(tTotalPrem * (discPct / 100));
+        let discAmount = tTotalPrem * (discPct / 100);
         
         let premAfterDisc = 0;
         if(discType === 'discount') {
@@ -552,26 +548,26 @@
         } else {
             premAfterDisc = tTotalPrem + discAmount;
         }
-        document.getElementById('discountAmount').innerText = discAmount.toFixed(0);
-        document.getElementById('premiumAfterDiscount').innerText = premAfterDisc.toFixed(0);
+        document.getElementById('discountAmount').innerText = discAmount.toFixed(2);
+        document.getElementById('premiumAfterDiscount').innerText = premAfterDisc.toFixed(2);
 
         let medPct = parseFloat(document.getElementById('medicalPct').value) || 0;
-        let medAmount = Math.round(tTotalPrem * (medPct / 100));
-        document.getElementById('medicalAmount').innerText = medAmount.toFixed(0);
+        let medAmount = tTotalPrem * (medPct / 100);
+        document.getElementById('medicalAmount').innerText = medAmount.toFixed(2);
         
         let medDiscPct = parseFloat(document.getElementById('medDiscountPct').value) || 0;
-        let medDiscAmount = Math.round(medAmount * (medDiscPct / 100));
-        document.getElementById('medDiscountAmount').innerText = medDiscAmount.toFixed(0);
+        let medDiscAmount = medAmount * (medDiscPct / 100);
+        document.getElementById('medDiscountAmount').innerText = medDiscAmount.toFixed(2);
         
-        let premBeforeGst = Math.round(premAfterDisc + medAmount - medDiscAmount);
-        document.getElementById('premiumBeforeGst').innerText = premBeforeGst.toFixed(0);
+        let premBeforeGst = premAfterDisc + medAmount - medDiscAmount;
+        document.getElementById('premiumBeforeGst').innerText = premBeforeGst.toFixed(2);
 
         let gstPct = parseFloat(document.getElementById('gstPct').value) || 0;
-        let gstAmount = Math.round(premBeforeGst * (gstPct / 100));
-        document.getElementById('gstAmount').innerText = gstAmount.toFixed(0);
+        let gstAmount = premBeforeGst * (gstPct / 100);
+        document.getElementById('gstAmount').innerText = gstAmount.toFixed(2);
 
-        let totalPayable = Math.round(premBeforeGst + gstAmount);
-        document.getElementById('totalPayable').innerText = totalPayable.toFixed(0);
+        let totalPayable = Math.round(premBeforeGst + gstAmount); // Final figure rounded to nearest Rupee
+        document.getElementById('totalPayable').innerText = totalPayable.toFixed(2);
     }
     
     function clearAll() {
@@ -671,11 +667,12 @@
         const originalOverflow = element.style.overflow;
         const originalWidth = element.style.width;
         const originalMaxWidth = element.style.maxWidth;
+        const originalHeight = element.style.height;
         
-        // Remove strict height limits that can cause clipping on mobile canvas renders
         element.style.overflow = 'visible';
         element.style.width = '1200px'; 
         element.style.maxWidth = '1200px';
+        element.style.height = 'max-content';
 
         const opt = {
             margin:       0.3,
@@ -683,7 +680,9 @@
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
                 scale: 2, 
-                windowWidth: 1200
+                windowWidth: 1200,
+                height: element.scrollHeight, 
+                scrollY: 0
             },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
         };
@@ -695,6 +694,7 @@
             element.style.overflow = originalOverflow;
             element.style.width = originalWidth;
             element.style.maxWidth = originalMaxWidth;
+            element.style.height = originalHeight;
         });
     }
 
