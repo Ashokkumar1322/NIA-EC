@@ -685,10 +685,11 @@
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
                 scale: 2, 
-                windowWidth: 1200 
+                windowWidth: 1200,
+                scrollY: 0 // FIX: Prevents the summary from being cut off if the user is scrolled down
             },
-            // Ensuring pagebreaks work organically
-            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
+            // FIX: Removed 'avoid-all' so it organically moves the summary to page 2 if needed
+            pagebreak:    { mode: ['css', 'legacy'] }, 
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
         };
 
