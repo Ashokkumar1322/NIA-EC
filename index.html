@@ -135,7 +135,8 @@
             margin-left: auto;
             border: 1px solid #bdc3c7;
             border-collapse: collapse;
-            page-break-inside: avoid; /* Prevents summary box from being split across PDF pages */
+            /* Ensures PDF page break doesn't cut the summary in half */
+            page-break-inside: avoid;
         }
         .summary-row {
             display: flex;
@@ -261,16 +262,12 @@
         <thead>
             <tr>
                 <th class="action-col" style="width: 6%;">ADD/DEL</th>
-                <th style="width: 14%;">OCCUPATION</th>
+                <th style="width: 18%;">OCCUPATION</th>
                 <th style="width: 10%;">TARIFF RATE (PER MILLE) FOR WAGES UPTO RS 15000</th>
-                <th style="width: 10%;">MONTHLY WAGES PER EMPLOYEE</th>
-                <th style="width: 8%;">NUMBER OF EMPLOYEES</th>
-                <th class="col-months" style="width: 10%;">POLICY PERIOD IN MONTHS</th>
+                <th style="width: 8%;">MONTHLY WAGES PER EMPLOYEE</th> <th style="width: 7%;">NUMBER OF EMPLOYEES</th> <th class="col-months" style="width: 8%;">POLICY PERIOD IN MONTHS</th>
                 <th class="col-days" style="display:none; width: 8%;">DATE FROM</th>
                 <th class="col-days" style="display:none; width: 8%;">DATE TO</th>
-                <th class="col-days" style="display:none; width: 9%;">PERIOD OF INSURANCE IN DAYS</th>
-                <th style="width: 9%;">TOTAL WAGES FOR POLICY PERIOD</th>
-                <th style="width: 8%;">TOTAL PREMIUM</th>
+                <th class="col-days" style="display:none; width: 7%;">PERIOD OF INSURANCE IN DAYS</th> <th style="width: 9%;">TOTAL WAGES FOR POLICY PERIOD</th> <th style="width: 9%;">TOTAL PREMIUM</th>
             </tr>
         </thead>
         <tbody id="tableBody">
@@ -494,7 +491,7 @@
             }
         }
 
-        // Display Total Visual Wages
+        // Display Total Visual Wages (Rounded)
         let totalWages = Math.round(salary * workers * periodMultiplier);
         
         // Split Premium Logic
@@ -514,6 +511,7 @@
             premium2 = (excessWages * secondaryRate) / 1000;
         }
 
+        // Enforce rounding on total row premium
         let totalPremium = Math.round(premium1 + premium2);
 
         tr.querySelector('.out-tot-sal').innerText = totalWages;
@@ -532,7 +530,8 @@
             tSalary += parseInt(tr.querySelector('.out-tot-sal').innerText) || 0;
             tTotalPrem += parseFloat(tr.querySelector('.out-tot-prem').innerText) || 0;
         });
-        
+
+        // Enforce rounding everywhere
         tTotalPrem = Math.round(tTotalPrem);
 
         document.getElementById('totWorkers').innerText = tWorkers;
@@ -670,11 +669,15 @@
         const originalOverflow = element.style.overflow;
         const originalWidth = element.style.width;
         const originalMaxWidth = element.style.maxWidth;
+        const originalHeight = element.style.height;
         
-        // Removed height constraint to prevent vertical clipping on mobile Canvas rendering
+        // Critical fix for mobile PDF cutoffs: 
+        // 1. Give the canvas infinite scrolling height
+        // 2. Do not limit the height to scrollHeight
         element.style.overflow = 'visible';
         element.style.width = '1200px'; 
         element.style.maxWidth = '1200px';
+        element.style.height = 'auto'; // allow it to expand freely
 
         const opt = {
             margin:       0.3,
@@ -682,8 +685,10 @@
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
                 scale: 2, 
-                windowWidth: 1200
+                windowWidth: 1200 
             },
+            // Ensuring pagebreaks work organically
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
         };
 
@@ -694,6 +699,7 @@
             element.style.overflow = originalOverflow;
             element.style.width = originalWidth;
             element.style.maxWidth = originalMaxWidth;
+            element.style.height = originalHeight;
         });
     }
 
