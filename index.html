@@ -135,7 +135,6 @@
             margin-left: auto;
             border: 1px solid #bdc3c7;
             border-collapse: collapse;
-            /* Ensures PDF page break doesn't cut the summary in half */
             page-break-inside: avoid;
         }
         .summary-row {
@@ -225,6 +224,16 @@
         .toggle-container label {
             font-weight: bold;
             cursor: pointer;
+        }
+
+        /* Footnote styling */
+        .footnote {
+            font-size: 0.85em;
+            color: #e74c3c;
+            text-align: right;
+            max-width: 550px;
+            margin: 10px 0 0 auto;
+            font-style: italic;
         }
     </style>
 </head>
@@ -343,6 +352,10 @@
             <div class="summary-label">TOTAL AMOUNT PAYABLE INCL GST</div>
             <div class="summary-value" id="totalPayable">0</div>
         </div>
+    </div>
+    
+    <div class="footnote">
+        * Currently discount on premium is restricted to 85% for Business Offices and no discount is to be allowed on Medical Extension premium.
     </div>
     
     <div class="export-controls" id="exportArea">
@@ -671,13 +684,10 @@
         const originalMaxWidth = element.style.maxWidth;
         const originalHeight = element.style.height;
         
-        // Critical fix for mobile PDF cutoffs: 
-        // 1. Give the canvas infinite scrolling height
-        // 2. Do not limit the height to scrollHeight
         element.style.overflow = 'visible';
         element.style.width = '1200px'; 
         element.style.maxWidth = '1200px';
-        element.style.height = 'auto'; // allow it to expand freely
+        element.style.height = 'auto';
 
         const opt = {
             margin:       0.3,
@@ -686,9 +696,8 @@
             html2canvas:  { 
                 scale: 2, 
                 windowWidth: 1200,
-                scrollY: 0 // FIX: Prevents the summary from being cut off if the user is scrolled down
+                scrollY: 0 
             },
-            // FIX: Removed 'avoid-all' so it organically moves the summary to page 2 if needed
             pagebreak:    { mode: ['css', 'legacy'] }, 
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
         };
