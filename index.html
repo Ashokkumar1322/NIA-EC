@@ -360,7 +360,6 @@
     
     <div class="export-controls" id="exportArea">
         <button class="btn-export btn-clear" onclick="clearAll()">🗑️ Clear All</button>
-        <button class="btn-export btn-excel" onclick="downloadCSV()">📥 Download as Excel</button>
         <button class="btn-export btn-pdf" onclick="downloadPDF()">📄 Download as PDF</button>
     </div>
 
@@ -613,104 +612,105 @@
         document.getElementById('wc-search-input').dispatchEvent(searchEvent);
     }
 
-    function downloadCSV() {
-        let csv = [];
+    function downloadPDF() {
+        let date = new Date().toLocaleDateString('en-GB');
+        let custName = document.getElementById('customerName').value || '-';
+        let office = document.getElementById('officeName').value || '-';
+        let info = document.getElementById('otherInfo').value || '-';
         
-        csv.push('"Customer Name:","' + (document.getElementById('customerName').value || '') + '"');
-        csv.push('"Office / Branch:","' + (document.getElementById('officeName').value || '') + '"');
-        csv.push('"Other Info:","' + (document.getElementById('otherInfo').value || '') + '"');
-        csv.push(""); 
-        
-        let rows = document.querySelectorAll("#premiumTable tr");
-
-        for (let i = 0; i < rows.length; i++) {
-            let row = [], cols = rows[i].querySelectorAll("td, th");
+        let rowsHtml = '';
+        const rows = document.querySelectorAll('#tableBody tr');
+        rows.forEach((tr, index) => {
+            let occ = tr.querySelector('.inp-occ').value || '-';
+            let emp = tr.querySelector('.inp-work').value || '0';
+            let wages = tr.querySelector('.out-tot-sal').innerText || '0';
             
-            for (let j = 0; j < cols.length; j++) {
-                if (cols[j].classList.contains('action-col') || window.getComputedStyle(cols[j]).display === 'none') {
-                    continue;
-                }
-                
-                let cellData = "";
-                let input = cols[j].querySelector('input');
-                if(input) {
-                    cellData = input.value;
-                } else {
-                    cellData = cols[j].innerText;
-                }
-                cellData = cellData.replace(/(\r\n|\n|\r)/gm, " ").replace(/"/g, '""');
-                row.push('"' + cellData + '"');
-            }
-            csv.push(row.join(","));
+            rowsHtml += `
+                <div style="margin-bottom: 15px;">
+                    <p style="margin: 3px 0;"><strong>ROW(${index + 1}):-</strong></p>
+                    <p style="margin: 3px 0;"><strong>OCCUPANCY:</strong> ${occ}</p>
+                    <p style="margin: 3px 0;"><strong>NUMBER OF EMPLOYEES :</strong> ${emp}</p>
+                    <p style="margin: 3px 0;"><strong>SUM INSURED ( TOTAL WAGES) :</strong> Rs. ${Number(wages).toLocaleString('en-IN')}</p>
+                </div>
+            `;
+        });
+
+        let mode = document.querySelector('input[name="periodMode"]:checked').value;
+        let periodStr = '';
+        if (mode === 'months') {
+            let months = rows[0]?.querySelector('.inp-months').value || '0';
+            periodStr = `${months} Month(s)`;
+        } else {
+            let from = rows[0]?.querySelector('.inp-date-from').value || '';
+            let to = rows[0]?.querySelector('.inp-date-to').value || '';
+            
+            const formatDate = (dateStr) => {
+                if(!dateStr) return 'N/A';
+                const [y, m, d] = dateStr.split('-');
+                return `${d}-${m}-${y}`;
+            };
+            periodStr = `${formatDate(from)} to ${formatDate(to)}`;
         }
 
-        csv.push("");
-        csv.push('"SUMMARY BLOCK"');
+        let medLimit = document.getElementById('medDropdown').value;
+        let medAmount = document.getElementById('medicalAmount').innerText;
+        let medExtHtml = '';
+        if (parseInt(medLimit) > 0 && parseFloat(medAmount) > 0) {
+            medExtHtml = `<p style="margin: 5px 0;"><strong>MEDICAL EXTENSION SUM INSURED :</strong> Rs. ${Number(medLimit).toLocaleString('en-IN')}</p>`;
+        }
+
+        let netPrem = document.getElementById('premiumBeforeGst').innerText;
+        let gst = document.getElementById('gstAmount').innerText;
+        let total = document.getElementById('totalPayable').innerText;
+
+        const pdfContainer = document.createElement('div');
+        pdfContainer.style.padding = '40px';
+        pdfContainer.style.fontFamily = 'Arial, sans-serif';
+        pdfContainer.style.color = '#000';
+        pdfContainer.style.fontSize = '14px';
+        pdfContainer.style.lineHeight = '1.5';
         
-        let summaryRows = document.querySelectorAll(".summary-row");
-        summaryRows.forEach(row => {
-            let label = row.querySelector(".summary-label").innerText.replace(/(\r\n|\n|\r)/gm, " ");
+        pdfContainer.innerHTML = `
+            <h2 style="text-align: center; margin-bottom: 5px; font-size: 20px;">THE NEW INDIA ASSURANCE CO. LTD.</h2>
+            <h3 style="text-align: center; margin-top: 0; font-size: 16px; text-decoration: underline;">PREMIUM QUOTATION<br>EMPLOYEES COMPENSATION POLICY</h3>
             
-            let cellData = "";
-            let inputCell = row.querySelector(".summary-input-cell");
-            if (inputCell) {
-                let input = inputCell.querySelector('input, select');
-                if (input) cellData = input.value + (input.id.includes('Pct') ? "%" : "");
-            }
+            <div style="text-align: right; font-weight: bold; margin-bottom: 20px;">DATE: ${date}</div>
             
-            let val = row.querySelector(".summary-value").innerText;
-            csv.push('"' + label + '","' + cellData + '","' + val + '"');
-        });
+            <p style="margin: 3px 0;"><strong>Mr/Ms/M/s:</strong> ${custName}</p>
+            <p style="margin: 3px 0;"><strong>BUSINESS OFFICE:</strong> ${office}</p>
+            <p style="margin: 3px 0;"><strong>OTHER INFO:</strong> ${info}</p>
 
-        let csvFile = new Blob([csv.join("\n")], {type: "text/csv"});
-        let downloadLink = document.createElement("a");
-        downloadLink.download = "Premium_Quote.csv";
-        downloadLink.href = window.URL.createObjectURL(csvFile);
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    }
+            <p style="text-align: justify; margin: 25px 0;">Greetings from The New India Assurance Co. Ltd., India's Premier Multinational General Insurance Company! We sincerely thank you for choosing us for your insurance needs. Based on the requirements you shared, we are pleased to present our customized quotation for your perusal. The details of your proposed coverage and the estimated premium are outlined below:</p>
 
-    function downloadPDF() {
-        let actionCells = document.querySelectorAll('.action-col');
-        actionCells.forEach(cell => cell.style.display = 'none');
-        document.getElementById('exportArea').style.display = 'none';
+            ${rowsHtml}
 
-        const element = document.getElementById('printableArea');
-        
-        const originalOverflow = element.style.overflow;
-        const originalWidth = element.style.width;
-        const originalMaxWidth = element.style.maxWidth;
-        const originalHeight = element.style.height;
-        
-        element.style.overflow = 'visible';
-        element.style.width = '1200px'; 
-        element.style.maxWidth = '1200px';
-        element.style.height = 'auto';
+            <hr style="border-top: 1px dashed #000; margin: 15px 0;">
+            <p style="margin: 5px 0;"><strong>PERIOD:</strong> ${periodStr}</p>
+            ${medExtHtml}
+            <hr style="border-top: 1px dashed #000; margin: 15px 0;">
+            
+            <p style="margin: 5px 0;"><strong>NET PREMIUM :</strong> Rs. ${Number(netPrem).toLocaleString('en-IN')}</p>
+            <p style="margin: 5px 0;"><strong>GST (18%) :</strong> Rs. ${Number(gst).toLocaleString('en-IN')}</p>
+            <p style="margin: 5px 0;"><strong>PREMIUM PAYABLE (GRAND TOTAL):</strong> Rs. ${Number(total).toLocaleString('en-IN')}</p>
+
+            <p style="margin-top: 30px; text-align: justify;">Should you require any modifications to this quote or have further queries, please feel free to reach out to us. We look forward to hearing from you.</p>
+
+            <p style="margin-top: 20px;">Thanking you.</p>
+            <p style="margin-top: 20px;">Sincerely,</p>
+            <br><br>
+            <p style="margin: 0; font-weight: bold;">Authorized Signatory</p>
+            <p style="margin: 0;">The New India Assurance Co. Ltd.</p>
+        `;
 
         const opt = {
-            margin:       0.3,
-            filename:     'Premium_Quote.pdf',
+            margin:       [0.5, 0.5, 0.5, 0.5],
+            filename:     'Premium_Quotation.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { 
-                scale: 2, 
-                windowWidth: 1200,
-                scrollY: 0 
-            },
-            pagebreak:    { mode: ['css', 'legacy'] }, 
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
         };
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            actionCells.forEach(cell => cell.style.display = '');
-            document.getElementById('exportArea').style.display = 'flex';
-            
-            element.style.overflow = originalOverflow;
-            element.style.width = originalWidth;
-            element.style.maxWidth = originalMaxWidth;
-            element.style.height = originalHeight;
-        });
+        html2pdf().set(opt).from(pdfContainer).save();
     }
 
     // --- TARIFF LOOKUP LOGIC ---
