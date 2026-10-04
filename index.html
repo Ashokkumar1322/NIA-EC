@@ -618,6 +618,13 @@
         let office = document.getElementById('officeName').value || '-';
         let info = document.getElementById('otherInfo').value || '-';
         
+        let mode = document.querySelector('input[name="periodMode"]:checked').value;
+        const formatDate = (dateStr) => {
+            if(!dateStr) return 'N/A';
+            const [y, m, d] = dateStr.split('-');
+            return `${d}-${m}-${y}`;
+        };
+
         let rowsHtml = '';
         const rows = document.querySelectorAll('#tableBody tr');
         rows.forEach((tr, index) => {
@@ -625,32 +632,27 @@
             let emp = tr.querySelector('.inp-work').value || '0';
             let wages = tr.querySelector('.out-tot-sal').innerText || '0';
             
+            // Calculate Period individually per row
+            let periodStr = '';
+            if (mode === 'months') {
+                let months = tr.querySelector('.inp-months').value || '0';
+                periodStr = `${months} Month(s)`;
+            } else {
+                let from = tr.querySelector('.inp-date-from').value || '';
+                let to = tr.querySelector('.inp-date-to').value || '';
+                periodStr = `${formatDate(from)} to ${formatDate(to)}`;
+            }
+            
             rowsHtml += `
                 <div style="margin-bottom: 15px;">
                     <p style="margin: 3px 0;"><strong>ROW(${index + 1}):-</strong></p>
                     <p style="margin: 3px 0;"><strong>OCCUPANCY:</strong> ${occ}</p>
                     <p style="margin: 3px 0;"><strong>NUMBER OF EMPLOYEES :</strong> ${emp}</p>
                     <p style="margin: 3px 0;"><strong>SUM INSURED ( TOTAL WAGES) :</strong> Rs. ${Number(wages).toLocaleString('en-IN')}</p>
+                    <p style="margin: 3px 0;"><strong>PERIOD:</strong> ${periodStr}</p>
                 </div>
             `;
         });
-
-        let mode = document.querySelector('input[name="periodMode"]:checked').value;
-        let periodStr = '';
-        if (mode === 'months') {
-            let months = rows[0]?.querySelector('.inp-months').value || '0';
-            periodStr = `${months} Month(s)`;
-        } else {
-            let from = rows[0]?.querySelector('.inp-date-from').value || '';
-            let to = rows[0]?.querySelector('.inp-date-to').value || '';
-            
-            const formatDate = (dateStr) => {
-                if(!dateStr) return 'N/A';
-                const [y, m, d] = dateStr.split('-');
-                return `${d}-${m}-${y}`;
-            };
-            periodStr = `${formatDate(from)} to ${formatDate(to)}`;
-        }
 
         let medLimit = document.getElementById('medDropdown').value;
         let medAmount = document.getElementById('medicalAmount').innerText;
@@ -684,9 +686,7 @@
 
             ${rowsHtml}
 
-            <hr style="border-top: 1px dashed #000; margin: 15px 0;">
-            <p style="margin: 5px 0;"><strong>PERIOD:</strong> ${periodStr}</p>
-            ${medExtHtml}
+            ${medExtHtml ? `<hr style="border-top: 1px dashed #000; margin: 15px 0;">${medExtHtml}` : ''}
             <hr style="border-top: 1px dashed #000; margin: 15px 0;">
             
             <p style="margin: 5px 0;"><strong>NET PREMIUM :</strong> Rs. ${Number(netPrem).toLocaleString('en-IN')}</p>
